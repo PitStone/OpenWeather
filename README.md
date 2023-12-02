@@ -24,3 +24,4 @@ Latest screen grabs:
 
 ![TFT screenshot 1](https://i.imgur.com/ORovwNY.png)
 
+This fork contains changes in the TFT_eSPI_OpenWeather_LittleFS example to support the ESP32-2432S028R board, also known as cheap yellow display.
