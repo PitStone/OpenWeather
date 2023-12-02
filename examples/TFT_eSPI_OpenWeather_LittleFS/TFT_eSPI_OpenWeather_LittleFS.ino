@@ -41,6 +41,8 @@
 ***************************************************************************************/
 #include <Arduino.h>
 
+#include "ESP32-2432S028R.h"
+
 #include <SPI.h>
 #include <TFT_eSPI.h> // https://github.com/Bodmer/TFT_eSPI
 
@@ -123,10 +125,10 @@ bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap)
 **                          Setup
 ***************************************************************************************/
 void setup() {
-  Serial.begin(250000);
+  Serial.begin(115200);
 
-  tft.begin();
-  tft.setRotation(0); // For 320x480 screen
+  tft.init();
+  tft.setRotation(2); // For 320x480 screen
   tft.fillScreen(TFT_BLACK);
 
   if (!LittleFS.begin()) {
@@ -328,16 +330,7 @@ void drawProgress(uint8_t percentage, String text) {
 void drawTime() {
   tft.loadFont(AA_FONT_LARGE, LittleFS);
 
-  // Convert UTC to local time, returns zone code in tz1_Code, e.g "GMT"
-  time_t local_time = TIMEZONE.toLocal(now(), &tz1_Code);
-
-  String timeNow = "";
-
-  if (hour(local_time) < 10) timeNow += "0";
-  timeNow += hour(local_time);
-  timeNow += ":";
-  if (minute(local_time) < 10) timeNow += "0";
-  timeNow += minute(local_time);
+  String timeNow = strTime(now());
 
   tft.setTextDatum(BC_DATUM);
   tft.setTextColor(TFT_YELLOW, TFT_BLACK);
@@ -355,8 +348,7 @@ void drawTime() {
 **                          Draw the current weather
 ***************************************************************************************/
 void drawCurrentWeather() {
-  time_t local_time = TIMEZONE.toLocal(now(), &tz1_Code);
-  String date = "Updated: " + strDate(local_time);
+  String date = "Updated: " + strDate(now());
   String weatherText = "None";
 
   tft.setTextDatum(BC_DATUM);
